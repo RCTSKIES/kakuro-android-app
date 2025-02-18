@@ -2,6 +2,8 @@ package com.example.kakurotest;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -63,6 +65,20 @@ public class PuzzleMediumGameplayActivity extends AppCompatActivity {
             et.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
             et.setBackgroundResource(R.drawable.editable_cell_bg);
             et.setGravity(Gravity.CENTER);
+
+            et.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    onRowColInputCheck(et);
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {}
+            });
+
             cell = et;
 
         } else if (cellType == '/') {
@@ -76,7 +92,7 @@ public class PuzzleMediumGameplayActivity extends AppCompatActivity {
         } else {
             // Uneditable Empty Cell (*)
             TextView emptyView = new TextView(this);
-            emptyView.setBackgroundColor(R.drawable.clue_cell_bg);
+            emptyView.setBackgroundResource(R.drawable.clue_cell_bg);
             cell = emptyView;
         }
 
@@ -91,6 +107,53 @@ public class PuzzleMediumGameplayActivity extends AppCompatActivity {
     }
 
 
+    public void onRowColInputCheck(View view) {
+        // Check rows
+        for (int row = 1; row < 5; row++) {
+            int sum = 0;
+            boolean allFilled = true;
+            for (int col = 1; col < 5; col++) {
+                EditText et = (EditText) gridLayout.getChildAt(row * 5 + col);
+                String input = et.getText().toString();
+                if (input.isEmpty()) {
+                    allFilled = false;
+                    break;
+                }
+                sum += Integer.parseInt(input);
+            }
+            // If all cells are filled, color them green or red based on correctness
+            if (allFilled) {
+                int color = (sum == puzzle.getRowClues()[row - 1]) ? Color.GREEN : Color.RED;
+                for (int col = 1; col < 5; col++) {
+                    EditText et = (EditText) gridLayout.getChildAt(row * 5 + col);
+                    et.setBackgroundColor(color);
+                }
+            }
+        }
+
+        // Check columns
+        for (int col = 1; col < 5; col++) {
+            int sum = 0;
+            boolean allFilled = true;
+            for (int row = 1; row < 5; row++) {
+                EditText et = (EditText) gridLayout.getChildAt(row * 5 + col);
+                String input = et.getText().toString();
+                if (input.isEmpty()) {
+                    allFilled = false;
+                    break;
+                }
+                sum += Integer.parseInt(input);
+            }
+            // If all cells are filled, color them green or red based on correctness
+            if (allFilled) {
+                int color = (sum == puzzle.getColClues()[col - 1]) ? Color.GREEN : Color.RED;
+                for (int row = 1; row < 4; row++) {
+                    EditText et = (EditText) gridLayout.getChildAt(row * 4 + col);
+                    et.setBackgroundColor(color);
+                }
+            }
+        }
+    }
 
 }
 
