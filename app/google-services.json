@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "414159102799",
+    "project_id": "kakuro-test",
+    "storage_bucket": "kakuro-test.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:414159102799:android:9eb343bfc8131ce8145b3a",
+        "android_client_info": {
+          "package_name": "com.example.authentication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDyN8qxexepiQNeua6C-G83B6nu5O--W8U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
