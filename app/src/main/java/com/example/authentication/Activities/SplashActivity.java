@@ -1,10 +1,9 @@
-package com.example.authentication;
+package com.example.authentication.Activities;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
@@ -15,6 +14,7 @@ import com.example.authentication.Generators.PuzzleGenerator5x5;
 import com.example.authentication.Objects.DatabaseManager;
 import com.example.authentication.Objects.GameState;
 import com.example.authentication.Objects.Grid;
+import com.example.authentication.R;
 
 import java.util.Arrays;
 
@@ -32,7 +32,7 @@ public class SplashActivity extends AppCompatActivity {
             initializeLevels(SplashActivity.this);
             runOnUiThread(() -> {
                 // Proceed to the next activity after initialization
-                Intent intent = new Intent(SplashActivity.this, MainMenuActivity.class);
+                Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                 startActivity(intent);
                 finish();
             });

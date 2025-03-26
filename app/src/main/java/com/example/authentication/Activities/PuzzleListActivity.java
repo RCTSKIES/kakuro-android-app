@@ -1,4 +1,4 @@
-package com.example.authentication;
+package com.example.authentication.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.widget.Button;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.authentication.R;
 import com.example.authentication.Services.LevelService;
 
 public class PuzzleListActivity extends AppCompatActivity {

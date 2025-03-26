@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.authentication.CompleteDialogueActivity;
+import com.example.authentication.Activities.CompleteDialogueActivity;
 import com.example.authentication.Objects.DatabaseManager;
 import com.example.authentication.Objects.GameState;
 import com.example.authentication.Objects.Grid;

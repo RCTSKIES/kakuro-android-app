@@ -1,4 +1,4 @@
-package com.example.authentication;
+package com.example.authentication.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +12,8 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.authentication.Interfaces.UIListener;
-import com.example.authentication.Services.AccountService;
+import com.example.authentication.R;
+import com.example.authentication.Services.Authentication.SessionService;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -35,7 +36,9 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loginUser();
+                String email = etEmail.getText().toString();
+                String password = etPassword.getText().toString();
+                authenticate(email,password);
             }
         });
 
@@ -48,10 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void loginUser(){
-        String email = etEmail.getText().toString();
-        String password = etPassword.getText().toString();
-
+    public void authenticate(String email, String password){
         if (email.isEmpty() || password.isEmpty()) {
             Toast.makeText(LoginActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
             return;
@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        AccountService.authenticate(email, password, new UIListener() {
+        SessionService.authenticate(email, password, new UIListener() {
             @Override
             public void onSuccess() {
                 Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();

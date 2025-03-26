@@ -1,4 +1,4 @@
-package com.example.authentication.Services;
+package com.example.authentication.Services.Authentication;
 
 import com.example.authentication.Interfaces.AuthenticationListener;
 import com.example.authentication.Objects.Account;
@@ -10,8 +10,7 @@ public class AuthService {
     public static void createUser(Account acc, AuthenticationListener listener) {
         try{
             auth.createUserWithEmailAndPassword(acc.getEmail(), acc.getPassword()).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DBService.saveAccount(acc);  // Save the account after successful Firebase Auth
+                if (task.isSuccessful()) {// Save the account after successful Firebase Auth
                     listener.onSuccess();
                 } else {
                     listener.onFail();

@@ -1,4 +1,4 @@
-package com.example.authentication;
+package com.example.authentication.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +11,8 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.authentication.Interfaces.UIListener;
-import com.example.authentication.Services.AccountService;
+import com.example.authentication.R;
+import com.example.authentication.Services.Authentication.RegistrationService;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -32,16 +33,16 @@ public class SignupActivity extends AppCompatActivity {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createAccount();
+                String username = etUserName.getText().toString();
+                String password = etPassword.getText().toString();
+                String email = etEmail.getText().toString();
+                register(username,email,password);
             }
         });
 
     }
 
-    public void createAccount(){
-        String username = etUserName.getText().toString();
-        String password = etPassword.getText().toString();
-        String email = etEmail.getText().toString();
+    public void register(String username, String email, String password){
 
         if (username.isEmpty() || password.isEmpty() || email.isEmpty()) {
             Toast.makeText(SignupActivity.this, "Please fill all fields", Toast.LENGTH_SHORT).show();
@@ -58,7 +59,7 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
-        AccountService.register(username, email, password, new UIListener() {
+        RegistrationService.register(username, email, password, new UIListener() {
             @Override
             public void onSuccess() {
                 Toast.makeText(SignupActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
