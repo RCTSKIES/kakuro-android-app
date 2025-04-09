@@ -4,7 +4,7 @@ public class XPCalculator {
     private static final int BASE_XP_EASY = 10; // Base XP for easy levels
     private static final int BASE_XP_MEDIUM = 20;
     private static final int BASE_XP_HARD = 30;
-    private static final int BASE_XP_ONLINE = 69;// Base XP for medium levels
+    //private static final int BASE_XP_ONLINE = 69;// Base XP for medium levels
     private static final int BONUS_XP_FAST = 5; // Bonus XP for completing in under 3 minutes
     private static final int BONUS_XP_MEDIUM = 2; // Bonus XP for completing in under 6 minutes
 
@@ -32,8 +32,8 @@ public class XPCalculator {
                 return BASE_XP_MEDIUM;
             case "hard":
                 return BASE_XP_HARD;
-            case "online":
-                return BASE_XP_ONLINE;
+//            case "online":
+//                return BASE_XP_ONLINE;
             default:
                 return 0; // Default case (should not happen)
         }

@@ -33,12 +33,12 @@
         android:text="Hard"
         android:textSize="20dp" />
 
-    <Button
-        android:id="@+id/btnOnline"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#090909"
-        android:text="ONLINE TEST"
-        android:textSize="20dp" />
+<!--    <Button-->
+<!--        android:id="@+id/btnOnline"-->
+<!--        android:layout_width="150dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:backgroundTint="#090909"-->
+<!--        android:text="ONLINE TEST"-->
+<!--        android:textSize="20dp" />-->
 
 </LinearLayout>

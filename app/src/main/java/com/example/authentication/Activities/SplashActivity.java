@@ -105,22 +105,22 @@ public class SplashActivity extends AppCompatActivity {
         }
 
 
-        // Generate 1 Hard level (ONLINE TEST)
-        for(int levelId = 1; levelId == 1; levelId++) {
-            PuzzleGeneratorOnline generator = new PuzzleGeneratorOnline();
-            Grid grid = generator.generateGrid();
-            int gridSize = 15;
-
-            // Log the generated grid
-            Log.d("App", "Generated Online level " + levelId);
-            Log.d("App", "Grid Size: " + gridSize);
-            Log.d("App", "Template: " + Arrays.deepToString(grid.getTemplate()));
-            Log.d("App", "Clues: " + Arrays.deepToString(grid.getClues()));
-
-            // Insert the level into the database
-            dbManager.insertLevel(levelId, "ONLINE", 15, grid, GameState.State.UNSTARTED, 0);
-            Log.d("App", "Inserted ONLINE TEST level " + levelId + " grid size: " + gridSize);
-        }
+//        // Generate 1 Hard level (ONLINE TEST)
+//        for(int levelId = 1; levelId == 1; levelId++) {
+//            PuzzleGeneratorOnline generator = new PuzzleGeneratorOnline();
+//            Grid grid = generator.generateGrid();
+//            int gridSize = 15;
+//
+//            // Log the generated grid
+//            Log.d("App", "Generated Online level " + levelId);
+//            Log.d("App", "Grid Size: " + gridSize);
+//            Log.d("App", "Template: " + Arrays.deepToString(grid.getTemplate()));
+//            Log.d("App", "Clues: " + Arrays.deepToString(grid.getClues()));
+//
+//            // Insert the level into the database
+//            dbManager.insertLevel(levelId, "ONLINE", 15, grid, GameState.State.UNSTARTED, 0);
+//            Log.d("App", "Inserted ONLINE TEST level " + levelId + " grid size: " + gridSize);
+//        }
 
         Log.d("App", "Initialized 5 Easy, 5 Medium and 5 Hard levels and 1 ONLINE TEST level");
     }
