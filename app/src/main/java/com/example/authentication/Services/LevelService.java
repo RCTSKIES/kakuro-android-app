@@ -208,7 +208,7 @@ public class LevelService extends AppCompatActivity {
                             boolean duplicate = false;
 
                             // Check current row (skip current column)
-                            for (int c = 0; c < gridSize; c++) {
+                             for (int c = 0; c < gridSize; c++) {
                                 if (c == col) continue;
                                 if (grid.getUserInput()[row][c] == value) {
                                     duplicate = true;

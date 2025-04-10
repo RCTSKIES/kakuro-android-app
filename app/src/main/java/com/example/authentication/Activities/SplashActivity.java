@@ -34,7 +34,7 @@ public class SplashActivity extends AppCompatActivity {
             initializeLevels(SplashActivity.this);
             runOnUiThread(() -> {
                 // Proceed to the next activity after initialization
-                Intent intent = new Intent(SplashActivity.this, MainMenuActivity.class);
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             });
