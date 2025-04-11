@@ -1,5 +1,7 @@
 package com.example.authentication.Services;
 
+import static com.example.authentication.Services.Authentication.SessionService.getLoggedInUsername;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -17,12 +19,15 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.authentication.Activities.CompleteDialogueActivity;
+import com.example.authentication.MyApp;
 import com.example.authentication.Objects.DatabaseManager;
+import com.example.authentication.Objects.FirebaseManager;
 import com.example.authentication.Objects.GameState;
 import com.example.authentication.Objects.Grid;
 import com.example.authentication.Objects.Level;
 import com.example.authentication.Objects.XPCalculator;
 import com.example.authentication.R;
+import com.example.authentication.Services.Authentication.SessionService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,8 +38,9 @@ public class LevelService extends AppCompatActivity {
     private GridLayout gridLayout;
     private Grid grid; // Holds the template, clues, and user input
     private GameState gameState; // Tracks the state of the puzzle
-    private DatabaseManager dbManager; // Manages database operations
-    private XPCalculator xpCalculator; // Manages XP earned
+    private DatabaseManager dbManager;
+    private FirebaseManager fbManager; // Manages database operations
+    //private XPCalculator xpCalculator; // Manages XP earned
     private int levelId; // The ID of the current level
     private String difficulty; // The difficulty of the current level
 
@@ -56,10 +62,18 @@ public class LevelService extends AppCompatActivity {
 
         // Initialize the database manager
         dbManager = new DatabaseManager(this);
+        fbManager = new FirebaseManager();
 
         // Load the level from the database or generate a new one
-        loadLevel();
+        if ("Online".equalsIgnoreCase(difficulty)) {
+            loadOnlineLevel(); // New method for Firebase
+        } else {
+            loadLocalLevel(); // Existing local level logic
+        }
+
     }
+
+
 
     private void completionMessage() {
         // Calculate XP
@@ -101,7 +115,7 @@ public class LevelService extends AppCompatActivity {
     }
 
     // Load the level from the database or generate a new one
-    private void loadLevel() {
+    private void loadLocalLevel() {
         new Thread(() -> {
             // Load the level from the database
             Level level = dbManager.loadLevel(levelId, difficulty);
@@ -135,6 +149,58 @@ public class LevelService extends AppCompatActivity {
             }
         }).start();
     }
+    private void loadOnlineLevel() {
+        //String userId = getLoggedInUsername(); // Implement this if needed
+        String userId = MyApp.getInstance().getCurrentUser().getAcc().getUsername();
+
+        FirebaseManager.loadLevel(levelId, difficulty, firebaseGrid -> {
+            if (firebaseGrid != null) {
+                grid = firebaseGrid;
+
+
+                if (userId == null) {
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "No user logged in", Toast.LENGTH_SHORT).show();
+                        finish();
+                    });
+                    return;
+                }
+
+                FirebaseManager.loadUserData(userId, levelId, difficulty, (userInput, state, time) -> {
+                    if (userInput != null) {
+                        grid.setUserInput(userInput);
+                        gameState = new GameState(grid, state);
+                        timeElapsed = time;
+                    } else {
+                        // Default values
+                        int size = grid.getTemplate().length;
+                        grid.setUserInput(new int[size][size]);
+                        gameState = new GameState(grid, GameState.State.UNSTARTED);
+                        timeElapsed = 0;
+                    }
+
+                    runOnUiThread(() -> {
+                        updateTimerDisplay();
+                        setupGrid();
+                        if (gameState.getCurrentState() != GameState.State.COMPLETED) {
+                            startTimer();
+                        } else {
+                            completionMessage();
+                        }
+                    });
+                });
+            } else {
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "Online level not found!", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+            }
+        });
+    }
+
+
+
+
 
     // Generates the grid dynamically (supports both 4x4 and 5x5)
     private void setupGrid() {
@@ -204,28 +270,42 @@ public class LevelService extends AppCompatActivity {
                             grid.setUserInput(row, col, 0);
                         } else {
                             // Check for duplicates in the row and column
-                            int gridSize = grid.getTemplate().length;
                             boolean duplicate = false;
 
-                            // Check current row (skip current column)
-                            for (int c = 0; c < gridSize; c++) {
-                                if (c == col) continue;
-                                if (grid.getUserInput()[row][c] == value) {
-                                    duplicate = true;
+                            // Check horizontal (row) run from its clue cell
+                            for (int c = col - 1; c >= 0; c--) {
+                                char cell = grid.getTemplate()[row][c];
+                                if (cell == '/' || cell == '=') {
+                                    // This is the clue cell for this row run
+                                    for (int k = c + 1; k < grid.getTemplate().length && grid.getTemplate()[row][k] == '-'; k++) {
+                                        if (k == col) continue;
+                                        if (grid.getUserInput()[row][k] == value) {
+                                            duplicate = true;
+                                            break;
+                                        }
+                                    }
                                     break;
+                                } else if (cell != '-') break;
+                            }
+
+                            // Check vertical (column) run from its clue cell
+                            if (!duplicate) {
+                                for (int r = row - 1; r >= 0; r--) {
+                                    char cell = grid.getTemplate()[r][col];
+                                    if (cell == '/' || cell == '=') {
+                                        // This is the clue cell for this column run
+                                        for (int k = r + 1; k < grid.getTemplate().length && grid.getTemplate()[k][col] == '-'; k++) {
+                                            if (k == row) continue;
+                                            if (grid.getUserInput()[k][col] == value) {
+                                                duplicate = true;
+                                                break;
+                                            }
+                                        }
+                                        break;
+                                    } else if (cell != '-') break;
                                 }
                             }
 
-                            // Check current column (skip current row)
-                            if (!duplicate) {
-                                for (int r = 0; r < gridSize; r++) {
-                                    if (r == row) continue;
-                                    if (grid.getUserInput()[r][col] == value) {
-                                        duplicate = true;
-                                        break;
-                                    }
-                                }
-                            }
 
                             if (duplicate) {
                                 et.setError("Number already exists in row/column");
@@ -414,7 +494,13 @@ public class LevelService extends AppCompatActivity {
         // Save the current state only if the level is not completed
         if (gameState.getCurrentState() != GameState.State.COMPLETED) {
             gameState.setCurrentState(GameState.State.ONGOING);
-            dbManager.saveLevel(levelId, difficulty, grid, gameState.getCurrentState(), timeElapsed);
+            if ("Online".equalsIgnoreCase(difficulty)) {
+                String username = getLoggedInUsername();
+                FirebaseManager.saveUserData(username, levelId, difficulty, grid.getUserInput(), gameState.getCurrentState(), timeElapsed);
+            } else {
+                dbManager.saveLevel(levelId, difficulty, grid, gameState.getCurrentState(), timeElapsed);
+            }
+            //dbManager.saveLevel(levelId, difficulty, grid, gameState.getCurrentState(), timeElapsed);
         }
 
         // Stop the timer
@@ -434,7 +520,13 @@ public class LevelService extends AppCompatActivity {
         // Save the current state only if the level is not completed
         if (gameState.getCurrentState() != GameState.State.COMPLETED) {
             gameState.setCurrentState(GameState.State.ONGOING);
-            dbManager.saveLevel(levelId, difficulty, grid, gameState.getCurrentState(), timeElapsed);
+            if ("Online".equalsIgnoreCase(difficulty)) {
+                String userId = getLoggedInUsername();
+                FirebaseManager.saveUserData(userId, levelId, difficulty, grid.getUserInput(), gameState.getCurrentState(), timeElapsed);
+            } else {
+                dbManager.saveLevel(levelId, difficulty, grid, gameState.getCurrentState(), timeElapsed);
+            }
+            //dbManager.saveLevel(levelId, difficulty, grid, gameState.getCurrentState(), timeElapsed);
         }
 
         // Stop the timer

@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.authentication.Interfaces.UIListener;
 import com.example.authentication.R;
 import com.example.authentication.Services.Authentication.SessionService;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -24,6 +26,15 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+//        if (currentUser != null) {
+//            // Redirect to profile immediately
+//            Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+//            startActivity(intent);
+//            finish();
+//            return; // Stop here, don’t initialize login UI
+//        }
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 

@@ -15,6 +15,10 @@ public class Level {
         this.timeElapsed = timeElapsed;
     }
 
+    public Level() {
+        // Needed for Firebase
+    }
+
     // Getters and setters
     public int getLevelId() {
         return levelId;

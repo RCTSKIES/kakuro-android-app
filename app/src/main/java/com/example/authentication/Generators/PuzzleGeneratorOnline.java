@@ -3,9 +3,12 @@ package com.example.authentication.Generators;
 import android.util.Log;
 import com.example.authentication.Objects.Grid;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 public class PuzzleGeneratorOnline {
     private final char[][] templates = {
@@ -63,33 +66,41 @@ public class PuzzleGeneratorOnline {
         int[][] numbers = new int[15][15];
         Random rand = new Random();
 
-        // Array of sets to track used numbers for each column
-        HashSet<Integer>[] usedNumbersCol = new HashSet[15];
-        for (int i = 0; i < 15; i++) {
-            usedNumbersCol[i] = new HashSet<>();
-        }
-
         for (int row = 0; row < 15; row++) {
-            HashSet<Integer> usedNumbersRow = new HashSet<>(); // Track numbers used in the current row
-
             for (int col = 0; col < 15; col++) {
                 if (templates[row][col] == '-') {
-                    int num;
-                    do {
-                        num = rand.nextInt(9) + 1; // Generate numbers 1-9
-                    } while (usedNumbersRow.contains(num) || usedNumbersCol[col].contains(num));
+                    List<int[]> run = getRunCells(row, col); // get cells in same clue run
+                    Set<Integer> usedInRun = new HashSet<>();
 
-                    // Add number to tracking sets
-                    usedNumbersRow.add(num);
-                    usedNumbersCol[col].add(num);
+                    // Gather used numbers in the current clue run
+                    for (int[] cell : run) {
+                        int r = cell[0], c = cell[1];
+                        if (numbers[r][c] != 0) {
+                            usedInRun.add(numbers[r][c]);
+                        }
+                    }
+
+                    // Try generating a number not used in the same clue run
+                    int num;
+                    int attempts = 0;
+                    do {
+                        num = rand.nextInt(9) + 1; // 1–9
+                        attempts++;
+                        if (attempts > 20) {
+                            num = 0; // fallback if too many retries (shouldn’t happen often)
+                            break;
+                        }
+                    } while (usedInRun.contains(num));
 
                     numbers[row][col] = num;
-                    Log.e("PuzzleGeneratorOnline", "Generated number: " + num);
+                    Log.d("Generator", "Placed " + num + " at [" + row + "][" + col + "]");
                 }
             }
         }
+
         return numbers;
     }
+
 
 
     // Generates clues for the clue cells ('/' and '=')
@@ -99,9 +110,11 @@ public class PuzzleGeneratorOnline {
         for (int row = 0; row < 15; row++) {
             for (int col = 0; col < 15; col++) {
                 if (templates[row][col] == '/') {
-                    clues[row][col] = calculateClue(numbers, templates, row, col);
+                    clues[row][col] = calculateClue(numbers, row, col);
+                    Log.e("PuzzleGeneratorOnline", "Generated clue: / " + Arrays.deepToString(clues));
                 } else if (templates[row][col] == '=') {
-                    clues[row][col] = combineClues(numbers, templates, row, col);
+                    clues[row][col] = combineClues(numbers, row, col);
+                    Log.e("PuzzleGeneratorOnline", "Generated clue: = " + Arrays.deepToString(clues));
                 }
             }
         }
@@ -109,18 +122,18 @@ public class PuzzleGeneratorOnline {
     }
 
     // Computes single clues ('/') by summing either row or column numbers
-    private int calculateClue(int[][] numbers, char[][] template, int row, int col) {
+    private int calculateClue(int[][] numbers, int row, int col) {
         int sum = 0;
 
         // Check if the clue is for a row sum
-        if (col + 1 < 15 && template[row][col + 1] == '-') {
-            for (int c = col + 1; c < 15 && template[row][c] == '-'; c++) {
+        if (col + 1 < 15 && templates[row][col + 1] == '-') {
+            for (int c = col + 1; c < 15 && templates[row][c] == '-'; c++) {
                 sum += numbers[row][c];
             }
         }
         // Check if the clue is for a column sum
-        else if (row + 1 < 15 && template[row + 1][col] == '-') {
-            for (int r = row + 1; r < 15 && template[r][col] == '-'; r++) {
+        else if (row + 1 < 15 && templates[row + 1][col] == '-') {
+            for (int r = row + 1; r < 15 && templates[r][col] == '-'; r++) {
                 sum += numbers[r][col];
             }
         }
@@ -129,19 +142,46 @@ public class PuzzleGeneratorOnline {
     }
 
     // Computes double clues ('=') by summing both row and column numbers
-    private int combineClues(int[][] numbers, char[][] template, int row, int col) {
+    private int combineClues(int[][] numbers, int row, int col) {
         int rowSum = 0, colSum = 0;
 
         // Get row sum
-        for (int c = col + 1; c < 15 && template[row][c] == '-'; c++) {
+        for (int c = col + 1; c < 15 && templates[row][c] == '-'; c++) {
             rowSum += numbers[row][c];
         }
 
         // Get column sum
-        for (int r = row + 1; r < 15 && template[r][col] == '-'; r++) {
+        for (int r = row + 1; r < 15 && templates[r][col] == '-'; r++) {
             colSum += numbers[r][col];
         }
 
         return rowSum * 100 + colSum; // Store as "rowSum/colSum"
     }
+
+    private List<int[]> getRunCells(int row, int col) {
+        List<int[]> run = new ArrayList<>();
+
+        // Check for horizontal run
+        for (int c = col - 1; c >= 0; c--) {
+            if (templates[row][c] == '/' || templates[row][c] == '=') {
+                for (int cc = c + 1; cc < 15 && templates[row][cc] == '-'; cc++) {
+                    run.add(new int[]{row, cc});
+                }
+                break;
+            } else if (templates[row][c] != '-') break;
+        }
+
+        // Check for vertical run
+        for (int r = row - 1; r >= 0; r--) {
+            if (templates[r][col] == '/' || templates[r][col] == '=') {
+                for (int rr = r + 1; rr < 15 && templates[rr][col] == '-'; rr++) {
+                    run.add(new int[]{rr, col});
+                }
+                break;
+            } else if (templates[r][col] != '-') break;
+        }
+
+        return run;
+    }
+
 }

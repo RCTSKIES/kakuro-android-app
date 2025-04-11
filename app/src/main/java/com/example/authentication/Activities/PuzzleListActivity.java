@@ -13,7 +13,7 @@ import com.example.authentication.Services.LevelService;
 
 public class PuzzleListActivity extends NavbarTopActivity {
 
-    Button btnlvl1, btnlvl2, btnlvl3, btnlvl4, btnlvl5, backbtn;
+    Button btnlvl1, btnlvl2, btnlvl3, btnlvl4, btnlvl5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -11,6 +11,15 @@ public class Grid {
         this.userInput = userInput;
     }
 
+    public Grid (char[][] template, int[][] clues){
+        this.template = template;
+        this.clues = clues;
+    }
+
+    public Grid() {
+        // Needed for Firebase
+    }
+
     // Getters and setters
     public char[][] getTemplate() {
         return template;
@@ -29,4 +38,9 @@ public class Grid {
             userInput[row][col] = value;
         }
     }
+
+    public void setUserInput(int[][] userInput) {
+        this.userInput = userInput;
+    }
+
 }

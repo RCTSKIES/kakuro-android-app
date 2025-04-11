@@ -24,7 +24,7 @@ public class MainMenuActivity extends NavbarTopActivity {
         btnEasy = findViewById(R.id.btnEasy);
         btnMedium = findViewById(R.id.btnMedium);
         btnHard = findViewById(R.id.btnHard);
-//        btnOnline = findViewById(R.id.btnOnline);
+        btnOnline = findViewById(R.id.btnOnline);
 
 
         btnEasy.setOnClickListener(new View.OnClickListener() {
@@ -54,15 +54,6 @@ public class MainMenuActivity extends NavbarTopActivity {
             }
         });
 
-//        btnOnline.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(MainMenuActivity.this, LevelService.class);
-//                intent.putExtra("difficulty", "Online");
-//                intent.putExtra("levelId", 1);
-//                startActivity(intent);
-//            }
-//        });
     }
 
 }

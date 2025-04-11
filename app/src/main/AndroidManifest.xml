@@ -17,6 +17,9 @@
             android:name=".Activities.NavbarTopActivity"
             android:exported="false" />
         <activity
+            android:name=".Activities.TestSplashOnline"
+            android:exported="false" />
+        <activity
             android:name=".Activities.ProfileActivity"
             android:exported="false" />
         <activity
