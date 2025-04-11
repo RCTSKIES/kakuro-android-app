@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.authentication.Interfaces.UIListener;
 import com.example.authentication.R;
-import com.example.authentication.Services.Authentication.SessionService;
+import com.example.authentication.Services.SessionService;
 
 public class LoginActivity extends AppCompatActivity {
 
