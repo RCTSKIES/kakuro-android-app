@@ -111,5 +111,26 @@ public class RealtimeDBService {
                     }
                 });
     }
+
+    public static void setUsername(String email) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("emails");
+
+        databaseRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    String username = snapshot.child(email).getValue(String.class);
+                    if (username != null) {
+                        MyApp.getInstance().getCurrentUser().setAcc(new Account(username, email));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }
 

@@ -13,14 +13,25 @@ import com.example.authentication.Generators.PuzzleGenerator4x4;
 import com.example.authentication.Generators.PuzzleGenerator5x5;
 import com.example.authentication.Generators.PuzzleGenerator9x9;
 import com.example.authentication.Generators.PuzzleGeneratorOnline;
+import com.example.authentication.Helpers.StringHelper;
+import com.example.authentication.MyApp;
 import com.example.authentication.Objects.DatabaseManager;
 import com.example.authentication.Objects.GameState;
 import com.example.authentication.Objects.Grid;
 import com.example.authentication.R;
+import com.example.authentication.Services.RealtimeDBService;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class SplashActivity extends AppCompatActivity {
+
+    FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +43,8 @@ public class SplashActivity extends AppCompatActivity {
 
         new Thread(() -> {
             initializeLevels(SplashActivity.this);
+            fetchCurrentUser();
+            seedXpValues();
             runOnUiThread(() -> {
                 // Proceed to the next activity after initialization
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
@@ -124,4 +137,32 @@ public class SplashActivity extends AppCompatActivity {
 
         Log.d("App", "Initialized 5 Easy, 5 Medium and 5 Hard levels and 1 ONLINE TEST level");
     }
+
+    public void fetchCurrentUser(){
+        auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null) {
+            String email = StringHelper.encodeEmail(Objects.requireNonNull(auth.getCurrentUser().getEmail()));
+            RealtimeDBService.setUsername(email);
+        }
+
+    }
+
+    private void seedXpValues() {
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
+
+        Map<String, Object> updates = new HashMap<>();
+
+        updates.put("dron/xp", 15);
+        updates.put("test/xp", 10);
+        updates.put("e/xp", 5);
+
+        usersRef.updateChildren(updates)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("SeedXP", "XP values successfully seeded!");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("SeedXP", "Failed to seed XP values", e);
+                });
+    }
+
 }
