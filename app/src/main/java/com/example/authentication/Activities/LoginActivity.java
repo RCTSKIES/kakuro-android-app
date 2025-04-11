@@ -16,6 +16,7 @@ import com.example.authentication.R;
 import com.example.authentication.Services.Authentication.SessionService;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.example.authentication.Services.SessionService;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -58,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }

@@ -1,18 +1,17 @@
-package com.example.authentication.Services.Authentication;
+package com.example.authentication.Services;
 
 import com.example.authentication.Interfaces.AuthenticationListener;
 import com.example.authentication.Interfaces.SearchListener;
 import com.example.authentication.Interfaces.UIListener;
 import com.example.authentication.MyApp;
 import com.example.authentication.Objects.Account;
-import com.example.authentication.Objects.User;
 
 public final class RegistrationService {
     private RegistrationService() {}
 
     public static void register(String username, String email, String password, UIListener uiListener) {
 
-        DBService.findAccount(username, email, new SearchListener() {
+        RealtimeDBService.findAccount(username, email, new SearchListener() {
             @Override
             public void found(String message) {
                 uiListener.onFailure(message);
@@ -25,7 +24,7 @@ public final class RegistrationService {
                 AuthService.createUser(newAccount, new AuthenticationListener() {
                     @Override
                     public void onSuccess() {
-                        DBService.saveAccount(newAccount);
+                        RealtimeDBService.saveAccount(newAccount);
                         MyApp.getInstance().getCurrentUser().setAcc(newAccount);
                         uiListener.onSuccess();
                     }

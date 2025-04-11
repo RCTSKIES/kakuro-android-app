@@ -1,4 +1,4 @@
-package com.example.authentication.Services.Authentication;
+package com.example.authentication.Services;
 
 import com.example.authentication.Helpers.StringHelper;
 import com.example.authentication.Interfaces.AuthenticationListener;

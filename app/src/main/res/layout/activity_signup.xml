@@ -64,5 +64,30 @@
         android:layout_marginTop="20dp"
         android:backgroundTint="@android:color/black"
         android:textColor="@android:color/white"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Already have an account? "
+            android:textSize="14sp"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@android:color/black"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            android:clickable="true"/>
+        <TextView
+            android:id="@+id/login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login"
+            android:textSize="14sp"
+            android:backgroundTint="@android:color/transparent"
+            android:textColor="@android:color/black"
+            android:clickable="true"/>
+    </LinearLayout>
 
 </LinearLayout>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -12,12 +13,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.authentication.Interfaces.UIListener;
 import com.example.authentication.R;
-import com.example.authentication.Services.Authentication.RegistrationService;
+import com.example.authentication.Services.RegistrationService;
 
 public class SignupActivity extends AppCompatActivity {
 
     EditText etUserName, etEmail, etPassword;
     Button btnSignUp;
+    TextView login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,7 @@ public class SignupActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnSignUp = findViewById(R.id.btnSignUp);
+        login = findViewById(R.id.login);
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,6 +40,15 @@ public class SignupActivity extends AppCompatActivity {
                 String password = etPassword.getText().toString();
                 String email = etEmail.getText().toString();
                 register(username,email,password);
+            }
+        });
+
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -63,7 +75,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onSuccess() {
                 Toast.makeText(SignupActivity.this, "Account created successfully", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(SignupActivity.this, ProfileActivity.class);
+                Intent intent = new Intent(SignupActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }
