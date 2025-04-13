@@ -1,11 +1,12 @@
 package com.example.authentication.Generators;
 
+import com.example.authentication.Interfaces.PuzzleGenerator;
 import com.example.authentication.Objects.Grid;
 
 import java.util.HashSet;
 import java.util.Random;
 
-public class PuzzleGenerator4x4 {
+public class PuzzleGenerator4x4 implements PuzzleGenerator {
     // The only template for 4x4 puzzles
     private final char[][] template = {
             {'*', '/', '/', '/'},

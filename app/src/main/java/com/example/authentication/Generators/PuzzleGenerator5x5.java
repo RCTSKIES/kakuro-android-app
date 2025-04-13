@@ -1,13 +1,15 @@
 package com.example.authentication.Generators;
 
 import android.util.Log;
+
+import com.example.authentication.Interfaces.PuzzleGenerator;
 import com.example.authentication.Objects.Grid;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Random;
 
-public class PuzzleGenerator5x5 {
+public class PuzzleGenerator5x5 implements PuzzleGenerator {
     private final char[][][] templates = {
             // First template
             {
