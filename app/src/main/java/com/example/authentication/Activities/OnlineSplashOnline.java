@@ -10,8 +10,7 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.example.authentication.Factory.PuzzleGeneratorFactory;
-import com.example.authentication.Generators.PuzzleGeneratorOnline;
-import com.example.authentication.Objects.FirebaseManager;
+import com.example.authentication.Managers.OnlineDatabaseManager;
 import com.example.authentication.Objects.Grid;
 import com.example.authentication.R;
 import com.example.authentication.Services.LevelService;
@@ -22,7 +21,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 
@@ -49,7 +47,7 @@ public class OnlineSplashOnline extends AppCompatActivity {
         // Create a background thread for the online level generation
         new Thread(() -> {
 
-            FirebaseManager.getDailyChallengeDate(storedDate -> {
+            OnlineDatabaseManager.getDailyChallengeDate(storedDate -> {
                 if (storedDate == null || !storedDate.equals(today)) {
                     // If no date is stored or the stored Date mismatch — regenerate daily challenge
                     regenerateDailyChallenge(today);
@@ -71,12 +69,12 @@ public class OnlineSplashOnline extends AppCompatActivity {
 
     private void generateOnlineLevel(Context context) {
         //DatabaseManager dbManager = new DatabaseManager(context);
-        FirebaseManager fbManager = new FirebaseManager();
+        OnlineDatabaseManager fbManager = new OnlineDatabaseManager();
 
 
 
         // Check if the level exists before generating
-        FirebaseManager.levelExists(1, "Online", exists -> {
+        OnlineDatabaseManager.levelExists(1, "Online", exists -> {
             if (exists) {
                 Log.d("App", "Online level already exists.");
                 return;
@@ -113,7 +111,7 @@ public class OnlineSplashOnline extends AppCompatActivity {
         String difficulty = "Online";
 
         // Replace level in Firebase
-        FirebaseManager.insertLevel(levelId, difficulty, newGrid.getTemplate().length, newGrid);
+        OnlineDatabaseManager.insertLevel(levelId, difficulty, newGrid.getTemplate().length, newGrid);
 
         // Clear all user-specific inputs
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
@@ -128,7 +126,7 @@ public class OnlineSplashOnline extends AppCompatActivity {
                 }
 
                 //Update the date after regeneration
-                FirebaseManager.updateDailyChallengeDate(today);
+                OnlineDatabaseManager.updateDailyChallengeDate(today);
             }
         });
     }

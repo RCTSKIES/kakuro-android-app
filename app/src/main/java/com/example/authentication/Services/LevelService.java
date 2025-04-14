@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -23,8 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.authentication.Activities.CompleteDialogueActivity;
 import com.example.authentication.MyApp;
-import com.example.authentication.Objects.DatabaseManager;
-import com.example.authentication.Objects.FirebaseManager;
+import com.example.authentication.Managers.LocalDatabaseManager;
+import com.example.authentication.Managers.OnlineDatabaseManager;
 import com.example.authentication.Objects.GameState;
 import com.example.authentication.Objects.Grid;
 import com.example.authentication.Objects.Level;
@@ -41,8 +40,8 @@ public class LevelService extends AppCompatActivity {
     private GridLayout gridLayout;
     private Grid grid; // Holds the template, clues, and user input
     private GameState gameState; // Tracks the state of the puzzle
-    private DatabaseManager dbManager;
-    private FirebaseManager fbManager; // Manages database operations
+    private LocalDatabaseManager dbManager;
+    private OnlineDatabaseManager fbManager; // Manages database operations
     //private XPCalculator xpCalculator; // Manages XP earned
     private int levelId; // The ID of the current level
     private String difficulty; // The difficulty of the current level
@@ -64,8 +63,8 @@ public class LevelService extends AppCompatActivity {
         difficulty = getIntent().getStringExtra("difficulty");
 
         // Initialize the database manager
-        dbManager = new DatabaseManager(this);
-        fbManager = new FirebaseManager();
+        dbManager = new LocalDatabaseManager(this);
+        fbManager = new OnlineDatabaseManager();
 
         // Load the level from the database or generate a new one
         if ("Online".equalsIgnoreCase(difficulty)) {
@@ -155,11 +154,11 @@ public class LevelService extends AppCompatActivity {
     private void loadOnlineLevel() {
         String userId = MyApp.getInstance().getCurrentUser().getAcc().getUsername();
 
-        FirebaseManager.loadLevel(levelId, difficulty, firebaseGrid -> {
+        OnlineDatabaseManager.loadLevel(levelId, difficulty, firebaseGrid -> {
             if (firebaseGrid != null) {
                 grid = firebaseGrid;
 
-                FirebaseManager.loadUserData(userId, levelId, difficulty, (userInput, state, time) -> {
+                OnlineDatabaseManager.loadUserData(userId, levelId, difficulty, (userInput, state, time) -> {
                     // Initialize gameState before setting user input
                     gameState = new GameState(grid, state != null ? state : GameState.State.UNSTARTED);
 
@@ -514,8 +513,8 @@ public class LevelService extends AppCompatActivity {
             gameState.setCurrentState(GameState.State.COMPLETED);
             if ("Online".equalsIgnoreCase(difficulty)) {
                 String username = getLoggedInUsername();
-                FirebaseManager.saveUserData(username, levelId, difficulty, grid.getUserInput(), gameState.getCurrentState(), timeElapsed);
-                FirebaseManager.SaveUserXP(username, totalXP);
+                OnlineDatabaseManager.saveUserData(username, levelId, difficulty, grid.getUserInput(), gameState.getCurrentState(), timeElapsed);
+                OnlineDatabaseManager.SaveUserXP(username, totalXP);
             } else {
                 dbManager.saveLevel(levelId, difficulty, grid, gameState.getCurrentState(), timeElapsed);
                 dbManager.saveXP(levelId, difficulty, totalXP);
@@ -532,7 +531,7 @@ public class LevelService extends AppCompatActivity {
             gameState.setCurrentState(GameState.State.ONGOING);
             if ("Online".equalsIgnoreCase(difficulty)) {
                 String username = getLoggedInUsername();
-                FirebaseManager.saveUserData(username, levelId, difficulty, grid.getUserInput(), gameState.getCurrentState(), timeElapsed);
+                OnlineDatabaseManager.saveUserData(username, levelId, difficulty, grid.getUserInput(), gameState.getCurrentState(), timeElapsed);
             } else {
                 dbManager.saveLevel(levelId, difficulty, grid, gameState.getCurrentState(), timeElapsed);
             }
@@ -558,7 +557,7 @@ public class LevelService extends AppCompatActivity {
             gameState.setCurrentState(GameState.State.ONGOING);
             if ("Online".equalsIgnoreCase(difficulty)) {
                 String userId = getLoggedInUsername();
-                FirebaseManager.saveUserData(userId, levelId, difficulty, grid.getUserInput(), gameState.getCurrentState(), timeElapsed);
+                OnlineDatabaseManager.saveUserData(userId, levelId, difficulty, grid.getUserInput(), gameState.getCurrentState(), timeElapsed);
             } else {
                 dbManager.saveLevel(levelId, difficulty, grid, gameState.getCurrentState(), timeElapsed);
             }

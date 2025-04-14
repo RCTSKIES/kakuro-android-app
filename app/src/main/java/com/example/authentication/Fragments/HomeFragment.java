@@ -1,6 +1,5 @@
 package com.example.authentication.Fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,13 +12,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.authentication.Objects.DatabaseManager;
+import com.example.authentication.Managers.LocalDatabaseManager;
 import com.example.authentication.R;
 
 public class HomeFragment extends Fragment {
 
     private TextView xpTextView;
-    private DatabaseManager dbManager;
+    private LocalDatabaseManager dbManager;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -42,7 +41,7 @@ public class HomeFragment extends Fragment {
         Bundle bundle = new Bundle();
 
         // Initialize XP bar
-        dbManager = new DatabaseManager(view.getContext());
+        dbManager = new LocalDatabaseManager(view.getContext());
         xpTextView.setText("Total XP: " + dbManager.getTotalXP());
 
         btnEasy.setOnClickListener(v -> {

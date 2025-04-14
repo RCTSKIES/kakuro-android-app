@@ -11,9 +11,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.authentication.Fragments.ProfileFragment;
 import com.example.authentication.Interfaces.UIListener;
-import com.example.authentication.Objects.FirebaseManager;
 import com.example.authentication.R;
 import com.example.authentication.Services.SessionService;
 

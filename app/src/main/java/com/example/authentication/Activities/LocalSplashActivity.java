@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.example.authentication.Factory.PuzzleGeneratorFactory;
 import com.example.authentication.Helpers.StringHelper;
 import com.example.authentication.Interfaces.PuzzleGenerator;
-import com.example.authentication.Objects.DatabaseManager;
+import com.example.authentication.Managers.LocalDatabaseManager;
 import com.example.authentication.Objects.GameState;
 import com.example.authentication.Objects.Grid;
 import com.example.authentication.R;
@@ -20,7 +20,6 @@ import com.example.authentication.Services.RealtimeDBService;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Arrays;
-import java.util.concurrent.ExecutorService;
 import java.util.Objects;
 
 public class LocalSplashActivity extends AppCompatActivity {
@@ -52,7 +51,7 @@ public class LocalSplashActivity extends AppCompatActivity {
     }
 
     public void initializeLevels(Context context) {
-        DatabaseManager dbManager = new DatabaseManager(context);
+        LocalDatabaseManager dbManager = new LocalDatabaseManager(context);
         PuzzleGenerator generator;
         factory = new PuzzleGeneratorFactory();
 

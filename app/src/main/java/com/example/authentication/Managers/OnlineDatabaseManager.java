@@ -1,5 +1,7 @@
-package com.example.authentication.Objects;
+package com.example.authentication.Managers;
 
+import com.example.authentication.Objects.GameState;
+import com.example.authentication.Objects.Grid;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -7,13 +9,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FirebaseManager {
+public class OnlineDatabaseManager {
 
     private static final FirebaseDatabase database = FirebaseDatabase.getInstance();
     private static final DatabaseReference levelsRef = database.getReference("levels");
     private static final DatabaseReference usersRef = database.getReference("users");
 
-    public FirebaseManager() {
+    public OnlineDatabaseManager() {
 
     }
     // Insert level data into the 'levels' node (this will be the same for all users)

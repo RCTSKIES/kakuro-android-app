@@ -1,4 +1,4 @@
-package com.example.authentication.Objects;
+package com.example.authentication.Managers;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -7,9 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.util.Arrays;
+import com.example.authentication.Objects.GameState;
+import com.example.authentication.Objects.Grid;
+import com.example.authentication.Objects.Level;
 
-public class DatabaseManager extends SQLiteOpenHelper {
+public class LocalDatabaseManager extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "kakuroGame.db";
     private static final int DATABASE_VERSION = 1;
 
@@ -25,7 +27,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String COLUMN_XP = "xp" ;
     private static final String COLUMN_TIME_ELAPSED = "time";
 
-    public DatabaseManager(Context context) {
+    public LocalDatabaseManager(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
