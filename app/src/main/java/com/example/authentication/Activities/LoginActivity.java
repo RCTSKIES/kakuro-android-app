@@ -21,7 +21,7 @@ import com.example.authentication.Services.SessionService;
 public class LoginActivity extends AppCompatActivity {
 
     EditText etEmail, etPassword;
-    Button btnLogin;
+    Button btnLogin, btnBack;
     TextView signUp;
 
     @Override
@@ -29,15 +29,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
 
-
-//        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-//        if (currentUser != null) {
-//            // Redirect to profile immediately
-//            Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
-//            startActivity(intent);
-//            finish();
-//            return; // Stop here, don’t initialize login UI
-//        }
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
@@ -45,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
+        btnBack = findViewById(R.id.backBtn);
         signUp = findViewById(R.id.signup);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +45,15 @@ public class LoginActivity extends AppCompatActivity {
                 String email = etEmail.getText().toString();
                 String password = etPassword.getText().toString();
                 authenticate(email,password);
+            }
+        });
+
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 

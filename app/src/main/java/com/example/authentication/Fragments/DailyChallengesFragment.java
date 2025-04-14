@@ -13,23 +13,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.authentication.Activities.ProfileActivity;
 import com.example.authentication.Activities.TestSplashOnline;
 import com.example.authentication.Adapters.PlayerAdapter;
 import com.example.authentication.Interfaces.UIListener;
 import com.example.authentication.MyApp;
-import com.example.authentication.Objects.Player;
 import com.example.authentication.R;
 import com.example.authentication.Services.RealtimeDBService;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class DailyChallengesFragment extends Fragment {
 

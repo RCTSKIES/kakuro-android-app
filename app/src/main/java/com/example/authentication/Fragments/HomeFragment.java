@@ -11,10 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
+import com.example.authentication.Objects.DatabaseManager;
 import com.example.authentication.R;
 
 public class HomeFragment extends Fragment {
+
+    private TextView xpTextView;
+    private DatabaseManager dbManager;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -28,6 +33,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        xpTextView = view.findViewById(R.id.xpTextView);
         Button btnEasy = view.findViewById(R.id.btnEasy);
         Button btnMedium = view.findViewById(R.id.btnMedium);
         Button btnHard = view.findViewById(R.id.btnHard);
@@ -35,6 +41,9 @@ public class HomeFragment extends Fragment {
         PuzzleListFragment listFragment = new PuzzleListFragment();
         Bundle bundle = new Bundle();
 
+        // Initialize XP bar
+        dbManager = new DatabaseManager(view.getContext());
+        xpTextView.setText("Total XP: " + dbManager.getTotalXP());
 
         btnEasy.setOnClickListener(v -> {
             bundle.putString("DIFFICULTY", "Easy");
@@ -69,13 +78,6 @@ public class HomeFragment extends Fragment {
                     .commit();
         });
 
-        // Uncomment if using the online button
-        // btnOnline.setOnClickListener(v -> {
-        //     Intent intent = new Intent(requireContext(), LevelService.class);
-        //     intent.putExtra("difficulty", "Online");
-        //     intent.putExtra("levelId", 1);
-        //     startActivity(intent);
-        // });
 
         return view;
     }

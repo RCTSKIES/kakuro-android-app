@@ -17,25 +17,13 @@
             android:name=".Activities.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.NavbarTopActivity"
-            android:exported="false" />
-        <activity
             android:name=".Activities.TestSplashOnline"
-            android:exported="false" />
-        <activity
-            android:name=".Activities.ProfileActivity"
             android:exported="false" />
         <activity
             android:name=".Activities.SignupActivity"
             android:exported="false" />
         <activity
             android:name=".Services.LevelService"
-            android:exported="false" />
-        <activity
-            android:name=".Activities.MainMenuActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Activities.PuzzleListActivity"
             android:exported="false" />
         <activity
             android:name=".Activities.LoginActivity"
