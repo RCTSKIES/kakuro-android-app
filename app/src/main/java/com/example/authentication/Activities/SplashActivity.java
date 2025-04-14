@@ -9,11 +9,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.authentication.Factory.PuzzleGeneratorFactory;
 import com.example.authentication.Generators.PuzzleGenerator4x4;
 import com.example.authentication.Generators.PuzzleGenerator5x5;
 import com.example.authentication.Generators.PuzzleGenerator9x9;
 import com.example.authentication.Generators.PuzzleGeneratorOnline;
 import com.example.authentication.Helpers.StringHelper;
+import com.example.authentication.Interfaces.PuzzleGenerator;
 import com.example.authentication.MyApp;
 import com.example.authentication.Objects.DatabaseManager;
 import com.example.authentication.Objects.GameState;
@@ -49,7 +51,7 @@ public class SplashActivity extends AppCompatActivity {
         new Thread(() -> {
             initializeLevels(SplashActivity.this);
             fetchCurrentUser();
-            seedXpValues();
+            //seedXpValues();
             runOnUiThread(() -> {
                 // Proceed to the next activity after initialization
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
@@ -61,6 +63,7 @@ public class SplashActivity extends AppCompatActivity {
 
     public void initializeLevels(Context context) {
         DatabaseManager dbManager = new DatabaseManager(context);
+        PuzzleGenerator generator;
 
 //        dbManager.clearDatabase(context);
 //        Log.d("App", "Database cleared");
@@ -73,7 +76,7 @@ public class SplashActivity extends AppCompatActivity {
 
         // Generate 5 Easy levels (4x4 grid)
         for (int levelId = 1; levelId <= 5; levelId++) {
-            PuzzleGenerator4x4 generator = new PuzzleGenerator4x4();
+            generator = PuzzleGeneratorFactory.getGenerator(4);
             Grid grid = generator.generateGrid();
             int gridSize = 4;
 
@@ -90,7 +93,7 @@ public class SplashActivity extends AppCompatActivity {
 
         // Generate 5 Medium levels (5x5 grid)
         for (int levelId = 1; levelId <= 5; levelId++) {
-            PuzzleGenerator5x5 generator = new PuzzleGenerator5x5();
+            generator = PuzzleGeneratorFactory.getGenerator(5);
             Grid grid = generator.generateGrid();
             int gridSize = 5;
 
@@ -107,7 +110,7 @@ public class SplashActivity extends AppCompatActivity {
 
         // Generate 5 Hard levels (9x9 grid)
         for (int levelId = 1; levelId <= 5; levelId++) {
-            PuzzleGenerator9x9 generator = new PuzzleGenerator9x9();
+            generator = PuzzleGeneratorFactory.getGenerator(9);
             Grid grid = generator.generateGrid();
             int gridSize = 9;
 
@@ -135,22 +138,22 @@ public class SplashActivity extends AppCompatActivity {
 
     }
 
-    private void seedXpValues() {
-        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
-
-        Map<String, Object> updates = new HashMap<>();
-
-        updates.put("dron/xp", 15);
-        updates.put("test/xp", 10);
-        updates.put("e/xp", 5);
-
-        usersRef.updateChildren(updates)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("SeedXP", "XP values successfully seeded!");
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("SeedXP", "Failed to seed XP values", e);
-                });
-    }
+//    private void seedXpValues() {
+//        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
+//
+//        Map<String, Object> updates = new HashMap<>();
+//
+//        updates.put("dron/xp", 15);
+//        updates.put("test/xp", 10);
+//        updates.put("e/xp", 5);
+//
+//        usersRef.updateChildren(updates)
+//                .addOnSuccessListener(aVoid -> {
+//                    Log.d("SeedXP", "XP values successfully seeded!");
+//                })
+//                .addOnFailureListener(e -> {
+//                    Log.e("SeedXP", "Failed to seed XP values", e);
+//                });
+//    }
 
 }
