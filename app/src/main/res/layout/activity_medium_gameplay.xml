@@ -5,72 +5,69 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <!-- Timer -->
+    <TextView
+        android:id="@+id/timerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00"
+        android:textSize="24sp"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
+        android:padding="8dp"/>
+
+    <!-- Scrollable Grid Layout -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="16dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:scrollbars="vertical">
 
-        <!-- Timer -->
-        <TextView
-            android:id="@+id/timerTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="00:00"
-            android:textSize="24sp"
-            android:gravity="center_horizontal"
-            android:layout_gravity="center_horizontal"
-            android:padding="8dp"/>
-
-        <!-- Scrollable grid takes remaining space -->
-        <ScrollView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:scrollbars="vertical">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
 
             <HorizontalScrollView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:scrollbars="horizontal"
+                android:fillViewport="true"
+                android:layout_gravity="center_horizontal">
 
-                <GridLayout
-                    android:id="@+id/gridLayout"
-                    android:layout_width="wrap_content"
+                <FrameLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:columnCount="15"
-                    android:rowCount="15"/>
+                    android:gravity="center">
+
+                    <GridLayout
+                        android:id="@+id/gridLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:columnCount="15"
+                        android:rowCount="15" />
+                </FrameLayout>
             </HorizontalScrollView>
-        </ScrollView>
-
-        <!-- Quit Button at the bottom -->
-        <Button
-            android:id="@+id/quitButton"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:text="Quit"
-            android:textSize="20sp"
-            android:backgroundTint="#000000"
-            android:onClick="onQuit"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"/>
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 
 
 
-    <!--    &lt;!&ndash; Buttons for Check Solution and Quit &ndash;&gt;-->
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:layout_marginTop="16dp"-->
-<!--        android:gravity="center">-->
 
-<!--      -->
-<!--    </LinearLayout>-->
-
+    <!-- Quit Button -->
+    <Button
+        android:id="@+id/quitButton"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="Quit"
+        android:textSize="20sp"
+        android:backgroundTint="#000000"
+        android:onClick="onQuit"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"/>
 </LinearLayout>
-
