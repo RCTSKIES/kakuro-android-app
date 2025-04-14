@@ -3,6 +3,7 @@ package com.example.authentication.Factory;
 import com.example.authentication.Generators.PuzzleGenerator4x4;
 import com.example.authentication.Generators.PuzzleGenerator5x5;
 import com.example.authentication.Generators.PuzzleGenerator9x9;
+import com.example.authentication.Generators.PuzzleGeneratorOnline;
 import com.example.authentication.Interfaces.PuzzleGenerator;
 
 public class PuzzleGeneratorFactory {
@@ -14,6 +15,8 @@ public class PuzzleGeneratorFactory {
                 return new PuzzleGenerator5x5();
             case 9:
                 return new PuzzleGenerator9x9();
+            case 15:
+                return new PuzzleGeneratorOnline();
             default:
                 throw new IllegalArgumentException("Unsupported puzzle size: " + size);
         }

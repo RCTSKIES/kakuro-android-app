@@ -9,13 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.example.authentication.Generators.PuzzleGenerator4x4;
-import com.example.authentication.Generators.PuzzleGenerator5x5;
-import com.example.authentication.Generators.PuzzleGenerator9x9;
+import com.example.authentication.Factory.PuzzleGeneratorFactory;
 import com.example.authentication.Generators.PuzzleGeneratorOnline;
-import com.example.authentication.Objects.DatabaseManager;
 import com.example.authentication.Objects.FirebaseManager;
-import com.example.authentication.Objects.GameState;
 import com.example.authentication.Objects.Grid;
 import com.example.authentication.R;
 import com.example.authentication.Services.LevelService;
@@ -29,11 +25,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public class TestSplashOnline extends AppCompatActivity {
+public class OnlineSplashOnline extends AppCompatActivity {
 
     private ExecutorService executorService;
+    private PuzzleGeneratorFactory factory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +39,12 @@ public class TestSplashOnline extends AppCompatActivity {
         TextView appTitle = findViewById(R.id.text_splash);
         appTitle.setText("Kakuro");
 
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.add(Calendar.DATE, 1); // Move to tomorrow
-//        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.getTime());
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 1); // Move to tomorrow
+        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.getTime());
 
 
-        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        //String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
         // Create a background thread for the online level generation
         new Thread(() -> {
@@ -60,11 +56,11 @@ public class TestSplashOnline extends AppCompatActivity {
                 }
             });
 
-            generateOnlineLevel(TestSplashOnline.this); // Run online level generation in separate thread
+            generateOnlineLevel(OnlineSplashOnline.this); // Run online level generation in separate thread
             //         Log.d("SplashActivity", "Starting MainActivity...");
             runOnUiThread(() -> {
                 // Proceed to the next activity after initialization
-                Intent intent = new Intent(TestSplashOnline.this, LevelService.class);
+                Intent intent = new Intent(OnlineSplashOnline.this, LevelService.class);
                 intent.putExtra("difficulty", "Online");
                 intent.putExtra("levelId", 1);
                 startActivity(intent);
@@ -88,8 +84,8 @@ public class TestSplashOnline extends AppCompatActivity {
 
             // Generate 1 Hard level (ONLINE TEST)
             for (int levelId = 1; levelId == 1; levelId++) {
-                PuzzleGeneratorOnline generator = new PuzzleGeneratorOnline();
-                Grid grid = generator.generateGrid();
+                //PuzzleGeneratorOnline generator = new PuzzleGeneratorOnline();
+                Grid grid = factory.getGenerator(15).generateGrid();
                 int gridSize = 15;
 
                 // Log the generated grid
@@ -110,8 +106,8 @@ public class TestSplashOnline extends AppCompatActivity {
     }
 
     private void regenerateDailyChallenge(String today) {
-        PuzzleGeneratorOnline generator = new PuzzleGeneratorOnline();
-        Grid newGrid = generator.generateGrid();
+//        PuzzleGeneratorOnline generator = new PuzzleGeneratorOnline();
+        Grid newGrid = factory.getGenerator(15).generateGrid();
 
         int levelId = 1; // Always reusing the same "daily challenge" level ID
         String difficulty = "Online";

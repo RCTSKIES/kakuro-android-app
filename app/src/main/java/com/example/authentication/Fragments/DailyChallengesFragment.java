@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.authentication.Activities.TestSplashOnline;
+import com.example.authentication.Activities.OnlineSplashOnline;
 import com.example.authentication.Adapters.PlayerAdapter;
 import com.example.authentication.Interfaces.UIListener;
 import com.example.authentication.MyApp;
@@ -55,7 +55,7 @@ public class DailyChallengesFragment extends Fragment {
 
         Button btnStart = view.findViewById(R.id.btnStartOnlineGame);
         btnStart.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), TestSplashOnline.class);
+            Intent intent = new Intent(getActivity(), OnlineSplashOnline.class);
             startActivity(intent);
         });
 
