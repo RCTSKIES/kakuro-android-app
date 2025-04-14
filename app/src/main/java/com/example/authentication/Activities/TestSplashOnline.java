@@ -19,8 +19,15 @@ import com.example.authentication.Objects.GameState;
 import com.example.authentication.Objects.Grid;
 import com.example.authentication.R;
 import com.example.authentication.Services.LevelService;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -36,8 +43,23 @@ public class TestSplashOnline extends AppCompatActivity {
         TextView appTitle = findViewById(R.id.text_splash);
         appTitle.setText("Kakuro");
 
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.add(Calendar.DATE, 1); // Move to tomorrow
+//        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.getTime());
+//
+
+        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
         // Create a background thread for the online level generation
         new Thread(() -> {
+
+            FirebaseManager.getDailyChallengeDate(storedDate -> {
+                if (storedDate == null || !storedDate.equals(today)) {
+                    // If no date is stored or the stored Date mismatch — regenerate daily challenge
+                    regenerateDailyChallenge(today);
+                }
+            });
+
             generateOnlineLevel(TestSplashOnline.this); // Run online level generation in separate thread
             //         Log.d("SplashActivity", "Starting MainActivity...");
             runOnUiThread(() -> {
@@ -84,6 +106,34 @@ public class TestSplashOnline extends AppCompatActivity {
 
             Log.d("App", "Initialized ONLINE TEST level");
 
+        });
+    }
+
+    private void regenerateDailyChallenge(String today) {
+        PuzzleGeneratorOnline generator = new PuzzleGeneratorOnline();
+        Grid newGrid = generator.generateGrid();
+
+        int levelId = 1; // Always reusing the same "daily challenge" level ID
+        String difficulty = "Online";
+
+        // Replace level in Firebase
+        FirebaseManager.insertLevel(levelId, difficulty, newGrid.getTemplate().length, newGrid);
+
+        // Clear all user-specific inputs
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users");
+        usersRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (DataSnapshot user : task.getResult().getChildren()) {
+                    usersRef.child(user.getKey())
+                            .child("levels")
+                            .child(String.valueOf(levelId))
+                            .child(difficulty)
+                            .removeValue();
+                }
+
+                //Update the date after regeneration
+                FirebaseManager.updateDailyChallengeDate(today);
+            }
         });
     }
 }

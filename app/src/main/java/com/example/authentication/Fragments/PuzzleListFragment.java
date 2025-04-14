@@ -64,17 +64,17 @@ public class PuzzleListFragment extends Fragment {
                 if ("Medium".equals(difficulty)) {
                     intent = new Intent(requireContext(), LevelService.class);
                     intent.putExtra("difficulty", "Medium");
-                    intent.putExtra("levelId", 1);
+                    intent.putExtra("levelId", 2);
                 }
                 else if ("Easy".equals(difficulty)) {
                     intent = new Intent(requireContext(), LevelService.class);
                     intent.putExtra("difficulty", "Easy");
-                    intent.putExtra("levelId", 1);
+                    intent.putExtra("levelId", 2);
                 }
                 else if ("Hard".equals(difficulty)) {
                     intent = new Intent(requireContext(), LevelService.class);
                     intent.putExtra("difficulty", "Hard");
-                    intent.putExtra("levelId", 1);
+                    intent.putExtra("levelId", 2);
                 }
                 else {
                     // Default case if difficulty is not set
@@ -89,17 +89,17 @@ public class PuzzleListFragment extends Fragment {
                 if ("Medium".equals(difficulty)) {
                     intent = new Intent(requireContext(), LevelService.class);
                     intent.putExtra("difficulty", "Medium");
-                    intent.putExtra("levelId", 1);
+                    intent.putExtra("levelId", 3);
                 }
                 else if ("Easy".equals(difficulty)) {
                     intent = new Intent(requireContext(), LevelService.class);
                     intent.putExtra("difficulty", "Easy");
-                    intent.putExtra("levelId", 1);
+                    intent.putExtra("levelId", 3);
                 }
                 else if ("Hard".equals(difficulty)) {
                     intent = new Intent(requireContext(), LevelService.class);
                     intent.putExtra("difficulty", "Hard");
-                    intent.putExtra("levelId", 1);
+                    intent.putExtra("levelId", 3);
                 }
                 else {
                     // Default case if difficulty is not set
@@ -114,17 +114,17 @@ public class PuzzleListFragment extends Fragment {
                 if ("Medium".equals(difficulty)) {
                     intent = new Intent(requireContext(), LevelService.class);
                     intent.putExtra("difficulty", "Medium");
-                    intent.putExtra("levelId", 1);
+                    intent.putExtra("levelId", 4);
                 }
                 else if ("Easy".equals(difficulty)) {
                     intent = new Intent(requireContext(), LevelService.class);
                     intent.putExtra("difficulty", "Easy");
-                    intent.putExtra("levelId", 1);
+                    intent.putExtra("levelId", 4);
                 }
                 else if ("Hard".equals(difficulty)) {
                     intent = new Intent(requireContext(), LevelService.class);
                     intent.putExtra("difficulty", "Hard");
-                    intent.putExtra("levelId", 1);
+                    intent.putExtra("levelId", 4);
                 }
                 else {
                     // Default case if difficulty is not set
@@ -139,17 +139,17 @@ public class PuzzleListFragment extends Fragment {
                 if ("Medium".equals(difficulty)) {
                     intent = new Intent(requireContext(), LevelService.class);
                     intent.putExtra("difficulty", "Medium");
-                    intent.putExtra("levelId", 1);
+                    intent.putExtra("levelId", 5);
                 }
                 else if ("Easy".equals(difficulty)) {
                     intent = new Intent(requireContext(), LevelService.class);
                     intent.putExtra("difficulty", "Easy");
-                    intent.putExtra("levelId", 1);
+                    intent.putExtra("levelId", 5);
                 }
                 else if ("Hard".equals(difficulty)) {
                     intent = new Intent(requireContext(), LevelService.class);
                     intent.putExtra("difficulty", "Hard");
-                    intent.putExtra("levelId", 1);
+                    intent.putExtra("levelId", 5);
                 }
                 else {
                     // Default case if difficulty is not set

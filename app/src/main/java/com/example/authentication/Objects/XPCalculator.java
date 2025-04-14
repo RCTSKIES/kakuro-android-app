@@ -6,7 +6,8 @@ public class XPCalculator {
     private static final int BASE_XP_HARD = 30;
     private static final int BASE_XP_ONLINE = 69;// Base XP for medium levels
     private static final int BONUS_XP_FAST = 5; // Bonus XP for completing in under 3 minutes
-    private static final int BONUS_XP_MEDIUM = 2; // Bonus XP for completing in under 6 minutes
+    private static final int BONUS_XP_MEDIUM = 2;// Bonus XP for completing in under 6 minutes
+    private static final int ONLINE_XP = 100;
 
     private long timeElapsed; // Time taken to complete the level (in milliseconds)
     private String difficulty; // Difficulty of the level
@@ -18,6 +19,7 @@ public class XPCalculator {
 
     // Calculate the total XP earned
     public int calculateXP() {
+
         int baseXP = getBaseXP();
         int bonusXP = calculateBonusXP();
         return baseXP + bonusXP;
@@ -51,6 +53,16 @@ public class XPCalculator {
             return 0; // No bonus XP after 6 minutes
         }
     }
+
+    private int calculateOnlineXP() {
+        int baseXP = ONLINE_XP;
+        long timeInMinutes = timeElapsed / (60 * 1000);
+        int deduction = (int) timeInMinutes * 10;
+
+        int finalXP = baseXP - deduction;
+        return Math.max(finalXP, 20);
+    }
+
 
     // Getters and setters
     public long getTimeElapsed() {

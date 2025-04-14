@@ -11,12 +11,12 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.authentication.Fragments.ProfileFragment;
 import com.example.authentication.Interfaces.UIListener;
+import com.example.authentication.Objects.FirebaseManager;
 import com.example.authentication.R;
-import com.example.authentication.Services.Authentication.SessionService;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.example.authentication.Services.SessionService;
+
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -27,6 +27,8 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
 
 //        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
 //        if (currentUser != null) {
@@ -84,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess() {
                 Toast.makeText(LoginActivity.this, "Logged in successfully", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }

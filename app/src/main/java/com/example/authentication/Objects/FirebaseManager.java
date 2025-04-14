@@ -111,6 +111,17 @@ public class FirebaseManager {
         });
     }
 
+    public static void SaveUserXP(String userId, int additionalXP) {
+        DatabaseReference xpRef = usersRef.child(userId).child("xp");
+        xpRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Long currentXP = task.getResult().getValue(Long.class);
+                int updatedXP = (currentXP != null ? currentXP.intValue() : 0) + additionalXP;
+                xpRef.setValue(updatedXP);
+            }
+        });
+    }
+
     // Convert int[][] to List<List<Integer>>
     private static List<List<Integer>> convertIntArrayToList(int[][] array) {
         List<List<Integer>> list = new ArrayList<>();
@@ -169,10 +180,28 @@ public class FirebaseManager {
         return array;
     }
 
+    public static void getDailyChallengeDate(FirebaseDateCallback callback) {
+        database.getReference("meta").child("daily_challenge_date").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                String date = task.getResult().getValue(String.class);
+                callback.onCallback(date);
+            } else {
+                callback.onCallback(null);
+            }
+        });
+    }
 
+    public static void updateDailyChallengeDate(String newDate) {
+        database.getReference("meta").child("daily_challenge_date").setValue(newDate);
+    }
 
 
     // Callback interfaces
+    public interface FirebaseDateCallback {
+        void onCallback(String date);
+    }
+
+
     public interface FirebaseCallback {
         void onCallback(Grid grid);
     }

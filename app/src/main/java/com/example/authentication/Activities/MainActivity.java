@@ -5,16 +5,12 @@ import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.authentication.Fragments.DailyChallengesFragment;
 import com.example.authentication.Fragments.HomeFragment;
 import com.example.authentication.Fragments.MessageFragment;
 import com.example.authentication.Fragments.ProfileFragment;
-import com.example.authentication.Objects.User;
 import com.example.authentication.R;
 import com.example.authentication.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;

@@ -1,6 +1,8 @@
 package com.example.authentication.Services;
 
-import static com.example.authentication.Services.Authentication.SessionService.getLoggedInUsername;
+//import static com.example.authentication.Services.Authentication.SessionService.getLoggedInUsername;
+
+import static com.example.authentication.Services.SessionService.getLoggedInUsername;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -27,7 +29,7 @@ import com.example.authentication.Objects.Grid;
 import com.example.authentication.Objects.Level;
 import com.example.authentication.Objects.XPCalculator;
 import com.example.authentication.R;
-import com.example.authentication.Services.Authentication.SessionService;
+//import com.example.authentication.Services.Authentication.SessionService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -470,6 +472,7 @@ public class LevelService extends AppCompatActivity {
 
             // Calculate XP
             XPCalculator xpCalculator = new XPCalculator(timeElapsed, difficulty);
+
             int totalXP = xpCalculator.calculateXP();
 
             // Format the time elapsed
@@ -483,8 +486,15 @@ public class LevelService extends AppCompatActivity {
 
             // Save the level state (optional)
             gameState.setCurrentState(GameState.State.COMPLETED);
-            dbManager.saveLevel(levelId, difficulty, grid, gameState.getCurrentState(), timeElapsed);
-            dbManager.saveXP(levelId, difficulty, totalXP);
+            if ("Online".equalsIgnoreCase(difficulty)) {
+                String username = getLoggedInUsername();
+                FirebaseManager.saveUserData(username, levelId, difficulty, grid.getUserInput(), gameState.getCurrentState(), timeElapsed);
+                FirebaseManager.SaveUserXP(username, totalXP);
+            } else {
+                dbManager.saveLevel(levelId, difficulty, grid, gameState.getCurrentState(), timeElapsed);
+                dbManager.saveXP(levelId, difficulty, totalXP);
+
+            }
 
         }
     }
