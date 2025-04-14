@@ -49,119 +49,94 @@ public class GameState {
         Log.d("GameState", "Validating grid...");
         char[][] template = grid.getTemplate();
         int[][] userInput = grid.getUserInput();
-        int[][] clues = grid.getClues();
+        int size = template.length;
 
-        // Check rows
-        for (int row = 0; row < template.length; row++) {
-            boolean hasEditableCells = false; // Track if the row has editable cells
-            int sum = 0;
-            HashSet<Integer> usedNumbers = new HashSet<>();
-            for (int col = 0; col < template[row].length; col++) {
-                if (template[row][col] == '-') {
-                    hasEditableCells = true; // Row has editable cells
-                    int value = userInput[row][col];
-                    if (value == 0) {
-                        Log.d("GameState", "Empty cell at row=" + row + ", col=" + col);
-                        return false; // Cell is empty
+        // Validate all horizontal runs
+        for (int row = 0; row < size; row++) {
+            for (int col = 0; col < size; col++) {
+                if (template[row][col] == '-' && (col == 0 || template[row][col - 1] != '-')) {
+                    int sum = 0;
+                    HashSet<Integer> seen = new HashSet<>();
+                    int c = col;
+                    while (c < size && template[row][c] == '-') {
+                        int val = userInput[row][c];
+                        if (val == 0 || seen.contains(val)) return false;
+                        sum += val;
+                        seen.add(val);
+                        c++;
                     }
-                    if (usedNumbers.contains(value)) {
-                        Log.d("GameState", "Duplicate number " + value + " in row=" + row);
-                        return false; // Duplicate number in row
-                    }
-                    usedNumbers.add(value);
-                    sum += value;
+                    int expected = getRowClue(row, col);
+                    if (sum != expected) return false;
                 }
-            }
-
-            // Skip rows without editable cells
-            if (!hasEditableCells) {
-                Log.d("GameState", "Skipping row " + row + " (no editable cells)");
-                continue;
-            }
-
-            // Check if the row sum matches the clue
-            int expectedSum = getRowClue(row);
-            if (sum != expectedSum) {
-                Log.d("GameState", "Row sum mismatch at row=" + row + ": expected=" + expectedSum + ", actual=" + sum);
-                return false;
             }
         }
 
-        // Check columns
-        for (int col = 0; col < template[0].length; col++) {
-            boolean hasEditableCells = false; // Track if the column has editable cells
-            int sum = 0;
-            HashSet<Integer> usedNumbers = new HashSet<>();
-            for (int row = 0; row < template.length; row++) {
-                if (template[row][col] == '-') {
-                    hasEditableCells = true; // Column has editable cells
-                    int value = userInput[row][col];
-                    if (value == 0) {
-                        Log.d("GameState", "Empty cell at row=" + row + ", col=" + col);
-                        return false; // Cell is empty
+        // Validate all vertical runs
+        for (int col = 0; col < size; col++) {
+            for (int row = 0; row < size; row++) {
+                if (template[row][col] == '-' && (row == 0 || template[row - 1][col] != '-')) {
+                    int sum = 0;
+                    HashSet<Integer> seen = new HashSet<>();
+                    int r = row;
+                    while (r < size && template[r][col] == '-') {
+                        int val = userInput[r][col];
+                        if (val == 0 || seen.contains(val)) return false;
+                        sum += val;
+                        seen.add(val);
+                        r++;
                     }
-                    if (usedNumbers.contains(value)) {
-                        Log.d("GameState", "Duplicate number " + value + " in col=" + col);
-                        return false; // Duplicate number in column
-                    }
-                    usedNumbers.add(value);
-                    sum += value;
+                    int expected = getColumnClue(row, col);
+                    if (sum != expected) return false;
                 }
-            }
-
-            // Skip columns without editable cells
-            if (!hasEditableCells) {
-                Log.d("GameState", "Skipping column " + col + " (no editable cells)");
-                continue;
-            }
-
-            // Check if the column sum matches the clue
-            int expectedSum = getColumnClue(col);
-            if (sum != expectedSum) {
-                Log.d("GameState", "Column sum mismatch at col=" + col + ": expected=" + expectedSum + ", actual=" + sum);
-                return false;
             }
         }
 
         Log.d("GameState", "Grid is valid!");
-        return true; // Grid is valid
+        return true;
     }
 
-    private int getRowClue(int row) {
+
+    private int getRowClue(int row, int col) {
         char[][] template = grid.getTemplate();
         int[][] clues = grid.getClues();
 
-        for (int col = 0; col < template[row].length; col++) {
-            if (template[row][col] == '/' || template[row][col] == '=') {
-                int clueValue = clues[row][col];
-                if (template[row][col] == '=') {
-                    // For '=' cells, the row clue is the first part of the combined value
-                    clueValue = clueValue / 100;
+        for (int c = col - 1; c >= 0; c--) {
+            char type = template[row][c];
+            if (type == '/' || type == '=') {
+                int clue = clues[row][c];
+                if (type == '=') {
+                    clue = clue / 100;
                 }
-                Log.d("getRowClue", "Row clue at row=" + row + ": " + clueValue);
-                return clueValue;
+                return clue;
+            } else if (type != '-') {
+                break; // no clue before run
             }
         }
-        Log.d("getRowClue", "No row clue found for row=" + row);
-        return 0; // No clue found
+
+        return 0; // no valid clue found
     }
 
-    private int getColumnClue(int col) {
+
+    private int getColumnClue(int row, int col) {
         char[][] template = grid.getTemplate();
         int[][] clues = grid.getClues();
 
-        for (int row = 0; row < template.length; row++) {
-            if (template[row][col] == '/' || template[row][col] == '=') {
-                int clueValue = clues[row][col];
-                if (template[row][col] == '=') {
-                    // For '=' cells, the column clue is the second part of the combined value
-                    clueValue = clueValue % 100;
+        for (int r = row - 1; r >= 0; r--) {
+            char type = template[r][col];
+            if (type == '/' || type == '=') {
+                int clue = clues[r][col];
+                if (type == '=') {
+                    clue = clue % 100;
                 }
-                Log.d("getColumnClue", "Column clue at col=" + col + ": " + clueValue);
-                return clueValue;
+                return clue;
+            } else if (type != '-') {
+                break;
             }
         }
-        Log.d("getColumnClue", "No column clue found for col=" + col);
-        return 0; // No clue found
+
+        return 0;
     }
+
+
+
 }

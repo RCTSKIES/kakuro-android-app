@@ -5,6 +5,7 @@ package com.example.authentication.Services;
 import static com.example.authentication.Services.SessionService.getLoggedInUsername;
 
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
@@ -152,34 +153,27 @@ public class LevelService extends AppCompatActivity {
         }).start();
     }
     private void loadOnlineLevel() {
-        //String userId = getLoggedInUsername(); // Implement this if needed
         String userId = MyApp.getInstance().getCurrentUser().getAcc().getUsername();
 
         FirebaseManager.loadLevel(levelId, difficulty, firebaseGrid -> {
             if (firebaseGrid != null) {
                 grid = firebaseGrid;
 
-
-                if (userId == null) {
-                    runOnUiThread(() -> {
-                        Toast.makeText(this, "No user logged in", Toast.LENGTH_SHORT).show();
-                        finish();
-                    });
-                    return;
-                }
-
                 FirebaseManager.loadUserData(userId, levelId, difficulty, (userInput, state, time) -> {
+                    // Initialize gameState before setting user input
+                    gameState = new GameState(grid, state != null ? state : GameState.State.UNSTARTED);
+
                     if (userInput != null) {
                         grid.setUserInput(userInput);
-                        gameState = new GameState(grid, state);
-                        timeElapsed = time;
+                        // Reinitialize gameState with updated grid
+                        gameState = new GameState(grid, state != null ? state : GameState.State.UNSTARTED);
                     } else {
-                        // Default values
                         int size = grid.getTemplate().length;
                         grid.setUserInput(new int[size][size]);
                         gameState = new GameState(grid, GameState.State.UNSTARTED);
-                        timeElapsed = 0;
                     }
+
+                    timeElapsed = time != 0 ? time : 0;
 
                     runOnUiThread(() -> {
                         updateTimerDisplay();
@@ -455,10 +449,42 @@ public class LevelService extends AppCompatActivity {
             }
         }
 
-        if (allFilled) {
+        if (isPuzzleComplete()) {
             isComplete(view);
         }
 
+    }
+
+    private boolean isPuzzleComplete() {
+        // Check if all editable cells are filled and sums match
+        char[][] template = grid.getTemplate();
+        int gridSize = template.length;
+
+        // 1. Check all editable cells are filled
+        for (int r = 0; r < gridSize; r++) {
+            for (int c = 0; c < gridSize; c++) {
+                if (template[r][c] == '-' && grid.getUserInput()[r][c] == 0) {
+                    return false;
+                }
+            }
+        }
+
+        // 2. Check all sums are correct (all cells should be green)
+        for (int r = 0; r < gridSize; r++) {
+            for (int c = 0; c < gridSize; c++) {
+                View cell = gridLayout.getChildAt(r * gridSize + c);
+                if (cell instanceof EditText) {
+                    if (cell.getBackground() instanceof ColorDrawable) {
+                        int color = ((ColorDrawable) cell.getBackground()).getColor();
+                        if (color == Color.RED) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 
 

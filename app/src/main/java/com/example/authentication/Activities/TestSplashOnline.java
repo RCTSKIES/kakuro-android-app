@@ -46,7 +46,7 @@ public class TestSplashOnline extends AppCompatActivity {
 //        Calendar calendar = Calendar.getInstance();
 //        calendar.add(Calendar.DATE, 1); // Move to tomorrow
 //        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(calendar.getTime());
-//
+
 
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
 
